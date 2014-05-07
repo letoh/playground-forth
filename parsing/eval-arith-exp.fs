@@ -20,6 +20,7 @@
 6 constant TKN_DIV
 7 constant TKN_LPR
 8 constant TKN_RPR
+9 constant TKN_END
 
 
 variable tkn.ref
@@ -57,23 +58,27 @@ variable tkn.val
 		else drop false then
 ;
 
+: pick.literal: ( id a n -- )
+	2>r 0 swap 2r> pick.oper:
+;
 
  ' + TKN_ADD s" +" pick.oper: pick.op.add?
  ' - TKN_SUB s" -" pick.oper: pick.op.sub?
  ' * TKN_MUL s" *" pick.oper: pick.op.mul?
  ' / TKN_DIV s" /" pick.oper: pick.op.div?
- 0   TKN_LPR s" (" pick.oper: pick.op.lpr?
- 0   TKN_RPR s" )" pick.oper: pick.op.rpr?
-
+     TKN_LPR s" (" pick.literal: pick.op.lpr?
+     TKN_RPR s" )" pick.literal: pick.op.rpr?
+     TKN_END s" ;;" pick.literal: pick.end?
 
 : tib-empty? ( -- f )
 	>in @ #tib @ >=
 ;
 
 : lex.next ( <token> -- tkn )
-	TKN_ERR tkn.ref !
+	TKN_END tkn.ref !
 	tib-empty? if exit then
 	bl word ( a )
+	pick.end?    if drop exit then
 	pick.number? if drop exit then
 	pick.op.add? if drop exit then
 	pick.op.sub? if drop exit then
@@ -82,6 +87,7 @@ variable tkn.val
 	pick.op.lpr? if drop exit then
 	pick.op.rpr? if drop exit then
 	pick.var?    if drop exit then
+	TKN_ERR tkn.ref !
 	drop
 ;
 
@@ -167,7 +173,7 @@ variable ans
 variable ans2
 
 
-ans := 2 * ( 3 + 4 ) * ( 5 + 6 )
+ans := 2 * ( 3 + 4 ) * ( 5 + 6 ) ;; ( this is comment )
 .( answer = ) ans ? cr
 
 ans2 := ( ans - 30 ) / 10

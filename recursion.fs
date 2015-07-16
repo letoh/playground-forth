@@ -1,15 +1,6 @@
 
-: foo
-	." foo" cr ;
-
-: foo
-	foo
-	." foo 2" cr ;
-
-foo
-
-
 : fib ( n -- m )
+  \ fib_1 = 1, fib_2 = 1
   dup 1 > if 1- dup recurse swap 1- recurse + then ;
 
 : fact ( n -- n! )

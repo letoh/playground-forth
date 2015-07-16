@@ -1,4 +1,4 @@
-( mutural recursion )
+( mutual recursion )
 
 defer odd
 : even ( n -- f )

@@ -33,10 +33,19 @@
     if ." pass" cr else ." failed at " i u. cr then
   loop 2drop ;
 
-.( * test fib:) cr
+cr .( * test fib:) cr
 ' fib ' fib_opt 10 1 test
 
-.( * test fact:) cr
+cr .( * test fact:) cr
 ' fact ' fact_opt 10 1 test
+
+cr .( * performance test:) cr
+40 fib_opt u. cr ( 0m0.001s )
+40 fib     u. cr ( 0m12.519s, much slower than the optimized versoin )
+
+cr .( * execution test:) cr
+550 fact_opt u. cr ( overflow but safe )
+550 fact     u. cr ( segfault )
+
 
 
